@@ -1,0 +1,28 @@
+# === DATASETS & IMAGES ===
+datasets/
+data/images/
+data/labels/
+
+# === MODEL WEIGHTS ===
+models/weights/
+*.pt
+*.pth
+*.onnx
+
+# === OUTPUTS ===
+outputs/
+runs/          # folder default hasil training YOLO
+
+# === PYTHON ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+*.log
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+calibration.json

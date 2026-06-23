@@ -1,5 +1,5 @@
 {
   "pixels_per_mm": null,
   "calibration_date": null,
-  "notes": "Run scripts/calibrate.py to generate this file"
+  "notes": "Run src/calibration.py to generate this file"
 }

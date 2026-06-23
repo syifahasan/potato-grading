@@ -11,7 +11,7 @@ models/weights/
 
 # === OUTPUTS ===
 outputs/
-runs/          # folder default hasil training YOLO
+runs/
 
 # === PYTHON ===
 __pycache__/

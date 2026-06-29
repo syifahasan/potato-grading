@@ -8,9 +8,12 @@
 # ============================================================
 
 import csv
+import logging
 import os
 import sys
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
@@ -42,7 +45,7 @@ def generate_session_id() -> str:
     return datetime.now().strftime("SESSION_%Y%m%d_%H%M%S")
 
 
-def log_session(detections: list, image_path: str, session_id: str = None) -> str:
+def log_session(detections: list[dict], image_path: str, session_id: str | None = None) -> str:
     """
     Simpan seluruh hasil satu sesi pengukuran ke CSV.
 
@@ -97,7 +100,7 @@ def log_session(detections: list, image_path: str, session_id: str = None) -> st
                 "image_file" : image_name,
             })
 
-    print(f"[Logger] {len(detections)} baris disimpan ke: {csv_path}")
+    logger.info("%d baris disimpan ke: %s", len(detections), csv_path)
     return csv_path
 
 
@@ -140,9 +143,24 @@ def get_log_summary(csv_path: str) -> dict:
         if grade in grade_counts:
             grade_counts[grade] += 1
 
-    # Rata-rata dimensi — convert string ke float dulu
-    lengths = [float(r["length_mm"]) for r in rows]
-    widths  = [float(r["width_mm"])  for r in rows]
+    # Rata-rata dimensi — skip baris yang nilainya tidak valid
+    lengths = []
+    widths  = []
+    for r in rows:
+        try:
+            lengths.append(float(r["length_mm"]))
+            widths.append(float(r["width_mm"]))
+        except (ValueError, KeyError):
+            logger.warning("Baris CSV tidak valid dilewati: %s", r)
+
+    if not lengths:
+        return {
+            "total_potatoes" : total_potatoes,
+            "total_sessions" : total_sessions,
+            "grade_counts"   : grade_counts,
+            "avg_length_mm"  : 0.0,
+            "avg_width_mm"   : 0.0,
+        }
 
     avg_length = sum(lengths) / len(lengths)
     avg_width  = sum(widths)  / len(widths)

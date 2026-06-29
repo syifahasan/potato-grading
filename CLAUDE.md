@@ -59,7 +59,7 @@ All paths are centralized in `config.py` (repo root). Every `src/` module and th
 1. `app/streamlit_app.py` — web UI; uploads image, calls `PotatoDetector`, renders annotated image + grade summary table, triggers CSV logging.
 2. `src/detector.py` — `PotatoDetector` class; loads YOLO model and calibration once, runs inference, calls `measurer` and `grader` per mask, returns a list of detection dicts.
 3. `src/measurer.py` — pure measurement logic: `load_calibration()`, `measure_from_mask()` (uses `cv2.minAreaRect` to get oriented bounding box → px → mm), `is_mask_valid()` (filters degenerate masks).
-4. `src/grader.py` — pure grading logic: `get_grade()` classifies by the longest dimension (mm) against `GRADE_TRESHOLDS` (note: typo in variable name — "TRESHOLDS"). Thresholds: A ≥ 80mm, B ≥ 60mm, C ≥ 40mm, D < 40mm. Also exports `GRADE_COLORS` (BGR) and `summarize_grades()`.
+4. `src/grader.py` — pure grading logic: `get_grade()` classifies by the longest dimension (mm) against `GRADE_THRESHOLDS` (note: typo in variable name — "TRESHOLDS"). Thresholds: A ≥ 80mm, B ≥ 60mm, C ≥ 40mm, D < 40mm. Also exports `GRADE_COLORS` (BGR) and `summarize_grades()`.
 5. `src/utils.py` — drawing helpers: `draw_detection()`, `draw_all_detections()`, `save_annotated_image()`, `image_to_bytes()` (OpenCV → PNG bytes for Streamlit).
 6. `src/logger.py` — appends per-session results to a daily CSV at `outputs/logs/log_YYYYMMDD.csv`.
 
@@ -75,7 +75,7 @@ All paths are centralized in `config.py` (repo root). Every `src/` module and th
 }
 ```
 
-**Key files to know when changing grading logic:** `src/grader.py:GRADE_TRESHOLDS` (thresholds) and `src/grader.py:GRADE_COLORS` (visualization colors). The Streamlit sidebar legend at `app/streamlit_app.py:57–61` must be kept in sync manually.
+**Key files to know when changing grading logic:** `src/grader.py:GRADE_THRESHOLDS` (thresholds) and `src/grader.py:GRADE_COLORS` (visualization colors). The Streamlit sidebar legend at `app/streamlit_app.py:57–61` must be kept in sync manually.
 
 ## Dataset
 
@@ -83,9 +83,7 @@ Single class: `Potato` (class index 0). ~1,400 original images, 3× augmented to
 
 Label format — YOLO instance segmentation polygon (normalized [0,1] coords). Empty `.txt` files are negative images (no potatoes).
 
-## Known Issues in Existing Code
+## Notes
 
-- `src/measurer.py`: `import os` is placed at the bottom of the file (line 68) instead of the top — works but is non-standard.
-- `test.py`: hardcodes `D:\PotatoProject` — not portable, use `src/measurement.py` or the Streamlit app instead.
-- `train.py`: references `yolo26n-seg.pt` (typo) instead of `yolov8n-seg.pt`.
-- `src/measurement.py` duplicates grading and measurement logic that now lives in `src/grader.py` and `src/measurer.py` — it is a prototype and not used by the main pipeline.
+- `src/grader.py:GRADE_THRESHOLDS` — ubah threshold di sini kalau standar grading berubah.
+- `src/measurement.py` — standalone prototype script, tidak dipakai pipeline utama.

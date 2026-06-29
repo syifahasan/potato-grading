@@ -16,7 +16,5 @@ BEST_MODEL = os.path.join(MODEL_DIR, "best.pt")
 CALIB_PATH = os.path.join(ROOT, "scripts", "calibration.json")
 OUTPUT_DIR = os.path.join(ROOT, "outputs")
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
 
 

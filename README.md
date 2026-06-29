@@ -24,7 +24,7 @@ Sistem otomatis untuk mendeteksi, mengukur, dan mengklasifikasikan kentang berda
 | C     |                    |
 | D     |                    |
 
-Threshold dapat diubah di `src/grader.py` → `GRADE_TRESHOLDS`.
+Threshold dapat diubah di `src/grader.py` → `GRADE_THRESHOLDS`.
 
 ---
 

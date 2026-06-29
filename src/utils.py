@@ -6,11 +6,14 @@
 #   3. Konversi gambar OpenCV → bytes (untuk Streamlit)
 # ============================================================
 
+import logging
 import cv2
 import os
 import sys
 import numpy as np
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
@@ -18,7 +21,7 @@ sys.path.insert(0, ROOT)
 from src.grader import get_grade_color
 
 
-def draw_detection(img: np.ndarray, detection: dict) -> np.ndarray:
+def draw_detection(img: np.ndarray, detection: dict[str, object]) -> np.ndarray:
     """
     Gambar satu bounding box + label untuk satu kentang di atas gambar.
 
@@ -116,7 +119,7 @@ def save_annotated_image(img: np.ndarray, output_dir: str, prefix: str = "result
     filepath  = os.path.join(output_dir, filename)
 
     cv2.imwrite(filepath, img)
-    print(f"[Utils] Gambar disimpan: {filepath}")
+    logger.info("Gambar disimpan: %s", filepath)
 
     return filepath
 

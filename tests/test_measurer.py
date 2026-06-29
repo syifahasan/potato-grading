@@ -25,8 +25,8 @@ def test_mask_valid_normal():
     ], dtype=np.float32)
 
     valid, reason = is_mask_valid(mask)
-    assert valid == True
-    assert reason == ""   # tidak ada pesan error kalau valid
+    assert valid
+    assert reason == ""
 
 def test_mask_invalid_too_few_points():
     # Mask dengan hanya 3 titik → harus ditolak (min_points=5)
@@ -35,8 +35,8 @@ def test_mask_invalid_too_few_points():
     ], dtype=np.float32)
 
     valid, reason = is_mask_valid(mask)
-    assert valid == False
-    assert "titik" in reason   # pesan error harus menyebut "titik"
+    assert not valid
+    assert "titik" in reason
 
 def test_mask_invalid_too_small_area():
     # Mask dengan titik cukup tapi area sangat kecil (kotak 5x5 = 25 px²)
@@ -45,8 +45,8 @@ def test_mask_invalid_too_small_area():
     ], dtype=np.float32)
 
     valid, reason = is_mask_valid(mask)
-    assert valid == False
-    assert "area" in reason   # pesan error harus menyebut "area"
+    assert not valid
+    assert "area" in reason
 
 
 # --- TEST measure_from_mask() ---

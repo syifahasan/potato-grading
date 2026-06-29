@@ -4,8 +4,8 @@
 
 # definisi batas ukuran per grade - ubah disini kalau standar berubah
 # satuan : mm, berdasarkan dimensi TERPANJANG kentang
-GRADE_TRESHOLDS = {
-    "A": 80, 
+GRADE_THRESHOLDS = {
+    "A": 80,
     "B": 60,
     "C": 40,
     # dibawah 40mm -> grade D
@@ -22,19 +22,19 @@ GRADE_COLORS = {
 def get_grade(length_mm: float, width_mm: float) -> str:
     major = max(length_mm, width_mm)
 
-    if major >= GRADE_TRESHOLDS["A"]:
+    if major >= GRADE_THRESHOLDS["A"]:
         return "Grade A"
-    elif major >= GRADE_TRESHOLDS["B"]:
+    elif major >= GRADE_THRESHOLDS["B"]:
         return "Grade B"
-    elif major >= GRADE_TRESHOLDS["C"]:
+    elif major >= GRADE_THRESHOLDS["C"]:
         return "Grade C"
     else:
         return "Grade D"
 
-def get_grade_color(grade: str) -> tuple:
-    return GRADE_COLORS.get(grade, (255, 255, 255)) # default putih jika grade tidak valid
+def get_grade_color(grade: str) -> tuple[int, int, int]:
+    return GRADE_COLORS.get(grade, (255, 255, 255))
 
-def summarize_grades(detections: list) -> dict:
+def summarize_grades(detections: list[dict]) -> dict[str, int]:
     """
     Hitung jumlah kentang per grade dari satu sesi pengukuran.
 

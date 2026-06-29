@@ -8,6 +8,6 @@ names: ['Potato']
 roboflow:
   workspace: potatoyolo
   project: potato-lqffs-0ka4b
-  version: 1
+  version: 3
   license: CC BY 4.0
-  url: https://universe.roboflow.com/potatoyolo/potato-lqffs-0ka4b/dataset/1
+  url: https://universe.roboflow.com/potatoyolo/potato-lqffs-0ka4b/dataset/3

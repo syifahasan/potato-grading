@@ -1,11 +1,13 @@
 import os
+import sys
 from ultralytics import YOLO
 
 if __name__ == "__main__":
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_YAML = os.path.join(BASE_DIR, 'dataset', 'data.yaml')
+    ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, ROOT)
+    from config import DATA_YAML
 
-    model = YOLO('yolo26n-seg.pt')
+    model = YOLO('yolov8n-seg.pt')
     results = model.train(
         data=DATA_YAML,
         epochs=100,

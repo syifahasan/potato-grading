@@ -80,22 +80,34 @@ if uploaded_file is None:
 temp_dir = os.path.join(OUTPUT_DIR, "temp")
 os.makedirs(temp_dir, exist_ok=True)
 
-temp_path = os.path.join(temp_dir, uploaded_file.name)
+# sanitasi nama file agar tidak ada path traversal (misal: ../../config.py)
+safe_name = os.path.basename(uploaded_file.name)
+temp_path = os.path.join(temp_dir, safe_name)
+resolved  = os.path.normpath(temp_path)
+if not resolved.startswith(os.path.normpath(temp_dir)):
+    st.error("Nama file tidak valid.")
+    st.stop()
+
 with open(temp_path, "wb") as f:
-    f.write(uploaded_file.getbuffer()) # tulis bytes file ke disk
+    f.write(uploaded_file.getbuffer())
 
 # load detector (dari cache kalau sudah pernah di-load)
 detector = load_detector()
 
-# update confidence treshold dari sidebar
-detector.conf = conf_treshold
+# run deteksi + buat anotasi selagi file masih ada, baru hapus
+try:
+    with st.spinner("Mendeteksi dan mengukur kentang ..."):
+        result = detector.run(temp_path, conf=conf_treshold)
 
-# run deteksi
-with st.spinner("Mendeteksi dan mengukur kentang ..."):
-    result = detector.run(temp_path)
+    detections = result["detections"]
+    total = result["total"]
 
-detections = result["detections"]
-total = result["total"]
+    # Buat gambar anotasi di sini — sebelum file temp dihapus
+    annotated_img = draw_all_detections(temp_path, detections) if total > 0 else None
+    img_bytes = image_to_bytes(annotated_img) if annotated_img is not None else None
+finally:
+    if os.path.exists(temp_path):
+        os.unlink(temp_path)
 
 # =====================================
 # TAMPILKAN HASIL
@@ -103,10 +115,6 @@ total = result["total"]
 if total == 0:
     st.warning("Tidak ada kentang terdeteksi. Coba turunkan confidence treshold di sidebar.")
     st.stop()
-
-# Buat gambar dengan anotasi
-annotated_img = draw_all_detections(temp_path, detections)
-img_bytes = image_to_bytes(annotated_img)
 
 # Layout dua kolom: gambar | ringkasan
 col_img, col_summary = st.columns([3, 2])

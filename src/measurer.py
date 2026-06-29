@@ -1,3 +1,4 @@
+import os
 import cv2
 import json
 import numpy as np
@@ -63,6 +64,3 @@ def is_mask_valid(mask_xy: np.ndarray, min_points: int = 5, min_area_px: float =
         return False, f"area mask terlalu kecil ({area:.0f} < {min_area_px} px²)"
 
     return True, ""
-
-
-import os
